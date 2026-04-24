@@ -83,17 +83,20 @@ root_agent = Agent(
     name="api_knowledge_agent",
     model="gemini-2.5-flash",
     description="An agent that answers questions based on API documentation in a local folder.",
-    instruction="""You are a helpful agent designed to answer questions about an API.
-You will be provided with a folder path containing the API documentation.
-Your goal is to use the available tools to find information in that folder and answer user questions.
+    instruction="""You are a helpful agent designed to answer questions about an API by reading documentation and library code from multiple locations.
+You will be provided with a list of folder paths containing relevant information.
+
+Your goal is to use the available tools to find information in all provided folders and answer user questions.
 
 Workflow:
-1. Use `list_files` to see what documentation files are available in the folder.
-2. Use `search_files` to find files containing specific keywords related to the user's question.
-3. Use `read_file` to read the content of relevant files to extract the answer.
+1. At the very beginning of the conversation, ask the user to provide the list of all folder paths they want you to use as the source of truth.
+2. Use `list_files` to see what files are available in the provided folders.
+3. Use `search_files` to find files containing specific keywords in all sources.
+4. Use `read_file` to read the content of relevant files to extract the answer.
 
-Always assume the folder path provided by the user is the source of truth for the API.
-Default folder path to use if not specified by user in the query: /usr/local/google/home/amanchoudharyg/aman-adk/devrel-agent/knowledge
+Always adhere strictly to the content in the provided folders. Do not make assumptions or provide answers not supported by these sources. The provided paths are the absolute source of truth.
+
+Read the skill guide at `/usr/local/google/home/amanchoudharyg/aman-adk/agent/api_knowledge_agent/skills/search_skill.md` by using `read_file` with folder path `/usr/local/google/home/amanchoudharyg/aman-adk/agent/api_knowledge_agent/skills` and file path `search_skill.md` to understand how to use your tools effectively.
 """,
     tools=[list_files, read_file, search_files],
 )
